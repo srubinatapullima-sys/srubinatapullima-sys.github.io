@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felices 5 Meses, Mi Chinita Hermosa 💖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        turquoise: {
+                            50: '#e6fffa',
+                            100: '#b2f5ea',
+                            200: '#81e6d9',
+                            300: '#4fd1c5',
+                            400: '#319795',
+                            500: '#00a896',
+                            600: '#028090',
+                            700: '#05668d',
+                            800: '#02c39a',
+                            900: '#013a40',
+                        },
+                        gold: {
+                            light: '#fef08a',
+                            DEFAULT: '#fbbf24',
+                            glow: '#f59e0b',
+                            dark: '#b45309'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        romantic: ['Great Vibes', 'cursive'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Modern Glassmorphism & Custom Ambient Styling */
+        body {
+            background: linear-gradient(135deg, #013a40 0%, #05668d 40%, #00a896 85%, #02c39a 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 12px 40px 0 rgba(0, 58, 64, 0.45);
+        }
+
+        .glass-panel-gold {
+            background: rgba(251, 191, 36, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            box-shadow: 0 10px 30px rgba(180, 83, 9, 0.25);
+        }
+
+        /* Ambient Animated Particles Canvas */
+        #ambient-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Polaroid Photo Frame Glow & Tilt Effects */
+        .polaroid-frame {
+            background: linear-gradient(145deg, #ffffff, #f0fdfa);
+            padding: 14px 14px 50px 14px;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px rgba(2, 195, 154, 0.4);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .polaroid-frame:hover {
+            transform: scale(1.03) rotate(0.5deg);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 45px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Pulsing Glow Animation */
+        @keyframes goldenGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.6)); }
+            50% { filter: drop-shadow(0 0 22px rgba(2, 195, 154, 0.9)); }
+        }
+        .gold-glow {
+            animation: goldenGlow 3s infinite ease-in-out;
+        }
+
+        /* Floating Animation */
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        .gentle-float {
+            animation: gentleFloat 5s ease-in-out infinite;
+        }
+
+        /* Timeline Glowing Node Line */
+        .timeline-line {
+            background: linear-gradient(to bottom, #fbbf24, #02c39a, #4fd1c5);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #013a40; }
+        ::-webkit-scrollbar-thumb { background: #02c39a; border-radius: 4px; }
+    </style>
+</head>
+<body class="font-sans antialiased text-white selection:bg-turquoise-300 selection:text-turquoise-900">
+
+    <!-- Canvas para Partículas y Corazones Flotantes -->
+    <canvas id="ambient-canvas"></canvas>
+
+    <!-- Botón Flotante para Música de Fondo (Web Audio Synthesizer) -->
+    <div class="fixed top-5 right-5 z-50">
+        <button id="musicToggleBtn" onclick="toggleAudio()" class="glass-panel px-4 py-3 rounded-full flex items-center space-x-3 text-xs md:text-sm font-medium hover:bg-white/30 transition-all duration-300 border border-amber-300/40 shadow-xl group">
+            <div id="musicIconWrapper" class="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition">
+                <i id="musicIcon" class="fas fa-music animate-pulse"></i>
+            </div>
+            <div class="text-left">
+                <span id="musicStatus" class="block font-semibold text-amber-200">Música Romántica</span>
+                <span id="musicAction" class="text-[10px] text-teal-100/80">Clic para reproducir</span>
+            </div>
+        </button>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="relative z-10 max-w-4xl mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
+
+        <!-- Header Romántico -->
+        <header class="text-center mb-10 w-full gentle-float">
+            <div class="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-teal-950/60 text-amber-300 border border-amber-400/40 text-xs md:text-sm font-semibold tracking-wider uppercase mb-4 shadow-lg">
+                <i class="fas fa-sparkles text-amber-300"></i>
+                <span>5 Meses Juntos • Amor Infinito</span>
+                <i class="fas fa-sparkles text-amber-300"></i>
+            </div>
+            
+            <h1 class="font-romantic text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-teal-100 to-amber-300 leading-none py-2 gold-glow">
+                Felices 5 Meses
+            </h1>
+            
+            <p class="font-cursive text-3xl md:text-4xl text-teal-100 mt-2">
+                Para la dueña de mi corazón: <span class="text-amber-300 font-bold underline decoration-amber-400/50">Mi Persona Favorita</span>
+            </p>
+        </header>
+
+        <!-- Sección de la Foto Prominente con Marco Polaroid Especial -->
+        <section class="w-full max-w-md my-4 relative z-20">
+            <!-- Destellos decorativos alrededor de la foto -->
+            <div class="absolute -top-6 -left-6 text-amber-300 text-3xl animate-bounce z-30">✨</div>
+            <div class="absolute -bottom-6 -right-6 text-teal-200 text-3xl animate-pulse z-30">💖</div>
+
+            <div class="polaroid-frame text-center mx-auto">
+                <div class="relative overflow-hidden rounded-lg bg-teal-900/20 border border-teal-200/30">
+                    <!-- Elemento SVG / Imagen integrado directamente para cargar siempre -->
+                    <img id="mainImage" src="Gemini_Generated_Image_.jpg" alt="Mi Persona Favorita - Siempre Juntos" class="w-full h-auto object-cover rounded-lg shadow-inner transition duration-700 hover:scale-105" onerror="loadFallbackSVGImage(this)">
+                </div>
+                
+                <div class="mt-4 flex flex-col items-center justify-center">
+                    <p class="font-romantic text-4xl text-teal-900 leading-tight">Mi Persona Favorita</p>
+                    <div class="flex items-center space-x-2 text-amber-600 mt-1">
+                        <i class="fas fa-infinity text-sm"></i>
+                        <span class="font-sans font-semibold text-xs uppercase tracking-widest text-teal-800">Siempre Juntos</span>
+                        <i class="fas fa-infinity text-sm"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Apodos Cariñosos Destacados -->
+        <section class="w-full my-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="glass-panel-gold p-4 rounded-2xl text-center border border-amber-300/30 hover:scale-105 transition duration-300">
+                    <i class="fas fa-crown text-amber-300 text-xl mb-1"></i>
+                    <p class="font-cursive text-2xl text-amber-100">Mi chinita hermosa</p>
+                </div>
+                <div class="glass-panel-gold p-4 rounded-2xl text-center border border-amber-300/30 hover:scale-105 transition duration-300">
+                    <i class="fas fa-gem text-amber-300 text-xl mb-1"></i>
+                    <p class="font-cursive text-2xl text-amber-100">Mi princesa hermosa</p>
+                </div>
+                <div class="glass-panel-gold p-4 rounded-2xl text-center border border-amber-300/30 hover:scale-105 transition duration-300">
+                    <i class="fas fa-heart text-amber-300 text-xl mb-1"></i>
+                    <p class="font-cursive text-2xl text-amber-100">Mi amorcito</p>
+                </div>
+                <div class="glass-panel-gold p-4 rounded-2xl text-center border border-amber-300/30 hover:scale-105 transition duration-300">
+                    <i class="fas fa-star text-amber-300 text-xl mb-1"></i>
+                    <p class="font-cursive text-2xl text-amber-100">Mi chiquita</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mensaje Especial de la Distancia -->
+        <section class="w-full my-4 glass-panel rounded-3xl p-6 md:p-8 text-center relative overflow-hidden border border-teal-200/30">
+            <div class="max-w-2xl mx-auto space-y-4">
+                <div class="inline-block p-3 rounded-full bg-amber-400/20 text-amber-300 mb-2">
+                    <i class="fas fa-plane-arrival text-3xl animate-pulse"></i>
+                </div>
+                <h2 class="font-serif text-2xl md:text-3xl text-amber-200 font-semibold italic">
+                    "La distancia nos enseña a amar con el corazón, no solo con la vista."
+                </h2>
+                <p class="text-sm md:text-base text-teal-50 font-light leading-relaxed">
+                    Aunque hoy estés lejos física de mí, no hay un solo segundo en que no te sienta a mi lado. Este tiempo separados es solo un pequeño capítulo en nuestra gran historia de amor. 
+                    <span class="font-semibold text-amber-300 block mt-2 text-base md:text-lg">¡Muy pronto estaremos otra vez juntos para no separarnos jamás!</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Contador Interactivo de Tiempo Juntos -->
+        <section class="w-full my-8 glass-panel rounded-3xl p-6 md:p-8 border border-amber-300/30">
+            <div class="text-center mb-6">
+                <span class="text-xs font-semibold uppercase tracking-widest text-teal-200">Tiempo de puro amor</span>
+                <h3 class="font-cursive text-4xl text-amber-300 mt-1">Nuestro Contador en Vivo</h3>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="bg-teal-950/60 p-4 rounded-2xl border border-teal-300/20 shadow-inner">
+                    <span id="counterDays" class="block font-bold text-3xl md:text-4xl text-amber-300">153</span>
+                    <span class="text-xs text-teal-200 uppercase font-medium tracking-wider">Días</span>
+                </div>
+                <div class="bg-teal-950/60 p-4 rounded-2xl border border-teal-300/20 shadow-inner">
+                    <span id="counterHours" class="block font-bold text-3xl md:text-4xl text-teal-100">3,672</span>
+                    <span class="text-xs text-teal-200 uppercase font-medium tracking-wider">Horas</span>
+                </div>
+                <div class="bg-teal-950/60 p-4 rounded-2xl border border-teal-300/20 shadow-inner">
+                    <span id="counterMinutes" class="block font-bold text-3xl md:text-4xl text-amber-300">220,320</span>
+                    <span class="text-xs text-teal-200 uppercase font-medium tracking-wider">Minutos</span>
+                </div>
+                <div class="bg-teal-950/60 p-4 rounded-2xl border border-teal-300/20 shadow-inner">
+                    <span id="counterSeconds" class="block font-bold text-3xl md:text-4xl text-teal-100">13,219,200</span>
+                    <span class="text-xs text-teal-200 uppercase font-medium tracking-wider">Segundos</span>
+                </div>
+            </div>
+            <p class="text-center text-xs text-teal-200/80 italic mt-4">¡Y cada segundo me enamoro más de ti!</p>
+        </section>
+
+        <!-- Línea de Tiempo de los 5 Meses -->
+        <section class="w-full my-8">
+            <div class="text-center mb-8">
+                <h3 class="font-cursive text-5xl text-amber-300">Nuestros 5 Meses Paso a Paso</h3>
+                <p class="text-xs text-teal-200 uppercase tracking-widest mt-1">El camino de nuestro amor</p>
+            </div>
+
+            <div class="relative pl-6 md:pl-0">
+                <!-- Central Line -->
+                <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 timeline-line -translate-x-1/2 rounded-full"></div>
+
+                <!-- Month 1 -->
+                <div class="relative my-6 md:flex md:items-center group">
+                    <div class="md:w-1/2 md:pr-8 md:text-right">
+                        <div class="glass-panel p-5 rounded-2xl border border-teal-300/30">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Mes 1</span>
+                            <h4 class="font-serif text-lg font-semibold text-white">El Comienzo de la Magia</h4>
+                            <p class="text-xs text-teal-100/90 mt-1">Donde todo inició. Esas primeras pláticas infinitas que me hicieron saber que eras alguien completamente única.</p>
+                        </div>
+                    </div>
+                    <div class="absolute -left-6 md:left-1/2 top-5 -translate-x-1/2 w-8 h-8 rounded-full bg-amber-400 border-4 border-teal-900 flex items-center justify-center text-teal-950 text-xs font-bold z-10 shadow-lg">1</div>
+                    <div class="hidden md:block md:w-1/2"></div>
+                </div>
+
+                <!-- Month 2 -->
+                <div class="relative my-6 md:flex md:items-center group">
+                    <div class="hidden md:block md:w-1/2"></div>
+                    <div class="absolute -left-6 md:left-1/2 top-5 -translate-x-1/2 w-8 h-8 rounded-full bg-teal-300 border-4 border-teal-900 flex items-center justify-center text-teal-950 text-xs font-bold z-10 shadow-lg">2</div>
+                    <div class="md:w-1/2 md:pl-8">
+                        <div class="glass-panel p-5 rounded-2xl border border-teal-300/30">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Mes 2</span>
+                            <h4 class="font-serif text-lg font-semibold text-white">Descubriéndonos</h4>
+                            <p class="text-xs text-teal-100/90 mt-1">Cada risa compartida y cada secreto contado nos unieron más. Me di cuenta de que no quería a nadie más que a ti.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month 3 -->
+                <div class="relative my-6 md:flex md:items-center group">
+                    <div class="md:w-1/2 md:pr-8 md:text-right">
+                        <div class="glass-panel p-5 rounded-2xl border border-teal-300/30">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Mes 3</span>
+                            <h4 class="font-serif text-lg font-semibold text-white">Amor Incondicional</h4>
+                            <p class="text-xs text-teal-100/90 mt-1">Comprendimos que la distancia no es rival para un sentimiento tan profundo y sincero como el nuestro.</p>
+                        </div>
+                    </div>
+                    <div class="absolute -left-6 md:left-1/2 top-5 -translate-x-1/2 w-8 h-8 rounded-full bg-amber-400 border-4 border-teal-900 flex items-center justify-center text-teal-950 text-xs font-bold z-10 shadow-lg">3</div>
+                    <div class="hidden md:block md:w-1/2"></div>
+                </div>
+
+                <!-- Month 4 -->
+                <div class="relative my-6 md:flex md:items-center group">
+                    <div class="hidden md:block md:w-1/2"></div>
+                    <div class="absolute -left-6 md:left-1/2 top-5 -translate-x-1/2 w-8 h-8 rounded-full bg-teal-300 border-4 border-teal-900 flex items-center justify-center text-teal-950 text-xs font-bold z-10 shadow-lg">4</div>
+                    <div class="md:w-1/2 md:pl-8">
+                        <div class="glass-panel p-5 rounded-2xl border border-teal-300/30">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Mes 4</span>
+                            <h4 class="font-serif text-lg font-semibold text-white">Cómplices y Compañeros</h4>
+                            <p class="text-xs text-teal-100/90 mt-1">Aprendiendo a apoyarnos mutuamente en todo momento. Tu amor se volvió mi lugar favorito en el mundo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Month 5 -->
+                <div class="relative my-6 md:flex md:items-center group">
+                    <div class="md:w-1/2 md:pr-8 md:text-right">
+                        <div class="glass-panel-gold p-5 rounded-2xl border border-amber-400/50 shadow-xl">
+                            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">Mes 5 (Hoy)</span>
+                            <h4 class="font-serif text-lg font-semibold text-white">¡Celebración & Futuro!</h4>
+                            <p class="text-xs text-teal-100/90 mt-1">Hoy celebramos 5 meses de un amor maravilloso y soñamos con el día del reencuentro que está cada vez más cerca.</p>
+                        </div>
+                    </div>
+                    <div class="absolute -left-6 md:left-1/2 top-5 -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 border-4 border-teal-900 flex items-center justify-center text-teal-950 text-sm font-bold z-10 shadow-xl animate-pulse">👑</div>
+                    <div class="hidden md:block md:w-1/2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Botones Interactivos: Sorpresa y Carta -->
+        <section class="w-full my-8 flex flex-col md:flex-row items-center justify-center gap-4">
+            <!-- Botón Sorpresa -->
+            <button onclick="triggerSurprise()" class="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-teal-950 font-bold text-base md:text-lg shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition duration-300 flex items-center justify-center space-x-3 border-2 border-amber-200">
+                <i class="fas fa-gift text-2xl animate-bounce"></i>
+                <span>¡Presiona para una Sorpresa!</span>
+            </button>
+
+            <!-- Botón Leer Carta -->
+            <button onclick="openModal()" class="w-full md:w-auto px-8 py-4 rounded-full bg-teal-950/80 text-teal-100 border-2 border-teal-300/50 font-bold text-base md:text-lg shadow-xl hover:bg-teal-900 hover:scale-105 active:scale-95 transition duration-300 flex items-center justify-center space-x-3">
+                <i class="fas fa-envelope-open-text text-amber-300 text-xl"></i>
+                <span>Leer Carta Especial</span>
+            </button>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-xs text-teal-200/70 space-y-1 pb-6">
+            <p>Con todo el amor de tu novio para su <strong>chinita hermosa</strong>.</p>
+            <p>¡Te amo con todo mi corazón, <strong>mi princesa hermosa</strong>!</p>
+        </footer>
+
+    </main>
+
+    <!-- Modal de Carta de Amor -->
+    <div id="letterModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="glass-panel p-6 md:p-8 rounded-3xl max-w-xl w-full border-2 border-amber-300/60 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-teal-200 hover:text-amber-300 text-xl w-8 h-8 rounded-full bg-teal-900/60 flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <i class="fas fa-heart text-amber-300 text-3xl mb-2"></i>
+                <h3 class="font-romantic text-5xl text-amber-200">Para Ti, Mi Vida</h3>
+            </div>
+
+            <div class="space-y-4 text-sm md:text-base text-teal-50 font-light leading-relaxed">
+                <p>
+                    Mi <strong>chinita hermosa</strong>, mi <strong>princesa hermosa</strong>, mi <strong>amorcito</strong>, mi <strong>chiquita</strong>...
+                </p>
+                <p>
+                    Hoy cumplimos 5 meses juntos y quería crear un rincón en internet que fuera totalmente tuyo y nuestro. Cada día que pasa me doy cuenta de lo afortunado que soy por tenerte en mi vida.
+                </p>
+                <p>
+                    Sé que la distancia física a veces puede sentirse difícil, pero quiero recordarte que mi amor por ti crece cada día más. No importa cuántos kilómetros nos separen hoy, tú estás presente en cada uno de mis pensamientos, en mis sueños y en mis metas.
+                </p>
+                <p>
+                    Muy pronto este tiempo pasará y volveremos a estar frente a frente. Te abrazaré muy fuerte y no te soltaré. Gracias por ser la mejor compañera, por tu ternura, tus risas y por ser mi persona favorita en todo el universo.
+                </p>
+                <p class="font-serif italic text-amber-200 text-right pt-2">
+                    Te amo infinitamente,<br>
+                    <span class="font-cursive text-2xl">Por siempre tuyo ❤️</span>
+                </p>
+            </div>
+
+            <div class="mt-6 text-center">
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-full bg-amber-400 text-teal-950 font-bold text-sm hover:bg-amber-300 transition">
+                    Cerrar Carta 💕
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Funcionalidad e Interacción -->
+    <script>
+        // Fallback en caso de que la imagen local requiera vista de respaldo enriquecida
+        function loadFallbackSVGImage(imgElement) {
+            const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="100%" height="100%">
+                <defs>
+                    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#05668d" />
+                        <stop offset="50%" stop-color="#00a896" />
+                        <stop offset="100%" stop-color="#02c39a" />
+                    </linearGradient>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fef08a" />
+                        <stop offset="100%" stop-color="#fbbf24" />
+                    </linearGradient>
+                </defs>
+                <rect width="600" height="800" fill="url(#bgGrad)" />
+                <circle cx="300" cy="350" r="200" fill="none" stroke="url(#goldGrad)" stroke-width="4" opacity="0.6" />
+                <path d="M300 250 C 250 180, 150 220, 150 320 C 150 420, 300 520, 300 550 C 300 520, 450 420, 450 320 C 450 220, 350 180, 300 250 Z" fill="url(#goldGrad)" opacity="0.85" />
+                <text x="300" y="640" font-family="'Great Vibes', cursive" font-size="52" fill="#ffffff" text-anchor="middle">Mi Persona Favorita</text>
+                <text x="300" y="700" font-family="'Montserrat', sans-serif" font-size="22" fill="#fef08a" text-anchor="middle" letter-spacing="3">SIEMPRE JUNTOS</text>
+            </svg>`;
+            imgElement.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgContent);
+        }
+
+        // Canvas de Partículas y Corazones Animados
+        const canvas = document.getElementById('ambient-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.speedX = Math.sin(this.y * 0.01) * 0.8;
+                this.opacity = Math.random() * 0.6 + 0.3;
+                this.isHeart = Math.random() > 0.4;
+                this.color = Math.random() > 0.5 ? '#fbbf24' : '#4fd1c5';
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.y * 0.02) * 0.5;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+
+                if (this.isHeart) {
+                    // Draw Heart
+                    ctx.beginPath();
+                    const topCurveHeight = this.size * 0.3;
+                    ctx.moveTo(this.x, this.y + topCurveHeight);
+                    ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                    ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size, this.x, this.y + this.size);
+                    ctx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight);
+                    ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Draw Gold Dust Circle
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size / 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Web Audio Synthesizer para Música Romántica Suave
+        let audioCtx;
+        let isPlayingMusic = false;
+        let synthInterval;
+
+        function playRomanticChime() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const chords = [
+                [261.63, 329.63, 392.00, 493.88], // C maj7
+                [220.00, 261.63, 329.63, 392.00], // A min7
+                [174.61, 220.00, 261.63, 329.63], // F maj7
+                [196.00, 246.94, 293.66, 392.00]  // G maj
+            ];
+
+            const chord = chords[Math.floor(Math.random() * chords.length)];
+            
+            chord.forEach((note, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(note, audioCtx.currentTime + idx * 0.2);
+
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime + idx * 0.2);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + idx * 0.2 + 1.8);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(audioCtx.currentTime + idx * 0.2);
+                osc.stop(audioCtx.currentTime + idx * 0.2 + 2.0);
+            });
+        }
+
+        function toggleAudio() {
+            const status = document.getElementById('musicStatus');
+            const action = document.getElementById('musicAction');
+            const icon = document.getElementById('musicIcon');
+
+            if (!isPlayingMusic) {
+                isPlayingMusic = true;
+                status.innerText = "Reproduciendo ♪";
+                action.innerText = "Clic para pausar";
+                icon.className = "fas fa-heart text-amber-300 animate-bounce";
+                playRomanticChime();
+                synthInterval = setInterval(playRomanticChime, 3000);
+            } else {
+                isPlayingMusic = false;
+                status.innerText = "Música Pausada";
+                action.innerText = "Clic para reproducir";
+                icon.className = "fas fa-music text-amber-300";
+                clearInterval(synthInterval);
+            }
+        }
+
+        // Botón Sorpresa con Confeti y Sonido
+        function triggerSurprise() {
+            // Explosión de confeti en colores dorados y turquesas
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#fbbf24', '#02c39a', '#ffffff', '#4fd1c5', '#fef08a']
+            });
+
+            playRomanticChime();
+
+            // Mensajes flotantes de amor
+            const messages = [
+                "¡Eres el amor de mi vida! ❤️",
+                "¡Te amo mi chinita hermosa! 👑",
+                "¡Gracias por estos 5 meses tan felices! ✨",
+                "¡Muy pronto estaremos juntos otra vez! ✈️💖"
+            ];
+            
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            alertModal(randomMsg);
+        }
+
+        function alertModal(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-10 left-1/2 -translate-x-1/2 z-50 glass-panel-gold px-6 py-4 rounded-full text-center border-2 border-amber-300 text-amber-100 font-bold text-base md:text-lg shadow-2xl animate-bounce';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3500);
+        }
+
+        // Modal de Carta
+        function openModal() {
+            document.getElementById('letterModal').classList.remove('hidden');
+            confetti({ particleCount: 40, spread: 50, origin: { y: 0.5 } });
+        }
+
+        function closeModal() {
+            document.getElementById('letterModal').classList.add('hidden');
+        }
+
+        // Contador de Tiempo Vivo
+        function updateCounter() {
+            // Fecha aproximada de inicio (5 meses atrás desde fecha actual)
+            const startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 5);
+
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor(diff / (1000 * 60));
+            const seconds = Math.floor(diff / 1000);
+
+            document.getElementById('counterDays').innerText = days.toLocaleString();
+            document.getElementById('counterHours').innerText = hours.toLocaleString();
+            document.getElementById('counterMinutes').innerText = minutes.toLocaleString();
+            document.getElementById('counterSeconds').innerText = seconds.toLocaleString();
+        }
+
+        setInterval(updateCounter, 1000);
+        updateCounter();
+    </script>
+</body>
+</html>
